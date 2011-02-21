@@ -159,7 +159,7 @@ public partial class _Default : System.Web.UI.Page
         {
             int length = (int)CDATA_Pos_end[x] - (int)CDATA_Pos_start[x];
             Console.WriteLine("Length: " + length); //debugging
-            CDATA_content.Add(content.Substring((int)CDATA_Pos_start[x], length + 3)); // add 3 to account for the end tag
+            CDATA_content.Add(content.Substring((int)CDATA_Pos_start[x], length + 3)); // add 3 to count for the end tag
         }
 
         for (int y = 0; y < CDATA_content.Count; y++)
