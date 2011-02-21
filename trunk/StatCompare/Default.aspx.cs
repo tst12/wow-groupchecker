@@ -13,6 +13,7 @@ using System.Xml;
 using System.Net;
 using System.IO;
 using System.Text;
+using System.Collections;
 
 public partial class _Default : System.Web.UI.Page
 {
@@ -112,20 +113,21 @@ public partial class _Default : System.Web.UI.Page
         cinitialNode.Text = output;
     }
 
-    public static System.Collections.IEnumerable IndexOfAll(string haystack, string needle)
+    // Thanks to http://www.dijksterhuis.org/manipulating-strings-in-csharp-finding-all-occurrences-of-a-string-within-another-string/
+    protected static System.Collections.IEnumerable IndexOfAll(string haystack, string needle)
     {
-
-        int pos, offset = 0;
-        while ((pos = haystack.IndexOf(needle)) > 0)
+        int pos;
+        int offset = 0;
+        int length = needle.Length;
+        while ((pos = haystack.IndexOf(needle, offset)) != -1)
         {
-            haystack = haystack.Substring(pos + needle.Length);
-            offset += pos;
-            yield return offset;
+            yield return pos;
+            offset = pos + length;
         }
-
     }
-
-    public void getCDATA()
+    
+    // Gets all CDATA from the URL and returns an ArrayList containing all entries, one per index
+    public ArrayList getCDATA()
     {
         HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://us.battle.net/wow/en/character/stonemaul/dankness/advanced");
         request.UserAgent = @"Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.13) Gecko/20101203 Firefox/3.6.13";
@@ -135,40 +137,39 @@ public partial class _Default : System.Web.UI.Page
         reader.Close();
         response.Close();
 
-        System.Collections.ArrayList CDATA_Pos_start = new System.Collections.ArrayList();
-        System.Collections.ArrayList CDATA_Pos_end = new System.Collections.ArrayList();
-        System.Collections.ArrayList CDATA_content = new System.Collections.ArrayList();
+        ArrayList CDATA_Pos_start = new ArrayList();
+        ArrayList CDATA_Pos_end = new ArrayList();
+        ArrayList CDATA_content = new ArrayList();
 
-        string start = "<![CDATA[";
-        string end = "]]>";
+        // Where CDATA begins
+        string CDATA_start = "<![CDATA[";
+        // Where CDATA ends
+        string CDATA_end = "]]>";
 
-        foreach (int Pos in IndexOfAll(content, start))
-        {
-            CDATA_Pos_start.Add(Pos);
-            citems.Text += content.Substring((int)CDATA_Pos_start[Pos]);
-        }
-        string test = "";
-        foreach (int Pos in IndexOfAll(content, end))
+        
+        //get the location (index) of the start of all CDATA_Start references in the file
+        foreach (int Pos in IndexOfAll(content, CDATA_start))
+           CDATA_Pos_start.Add(Pos);
+              
+        //get the location (index) of the start of all CDATA_end references in the file
+        foreach (int Pos in IndexOfAll(content, CDATA_end))
             CDATA_Pos_end.Add(Pos);
 
         for (int x = 0; x < CDATA_Pos_start.Count; x++)
         {
-            //int length = (int)CDATA_Pos_end[x] - (int)CDATA_Pos_start[x];
-            CDATA_content.Add(content.Substring((int)CDATA_Pos_start[x], 10));
+            int length = (int)CDATA_Pos_end[x] - (int)CDATA_Pos_start[x];
+            Console.WriteLine("Length: " + length); //debugging
+            CDATA_content.Add(content.Substring((int)CDATA_Pos_start[x], length + 3)); // add 3 to account for the end tag
         }
-        //start at pos(1)
-        //find first instance of "]]>"
-        //get substring of pos(1), pos(x)
-        //save output in string
-        //repeat with pos(2)
 
         for (int y = 0; y < CDATA_content.Count; y++)
-            citems.Text += (string)CDATA_content[y];
-        //cname.Text = (string)CDATA_content[1];
+            citems.Text += y + ": " + (string)CDATA_content[y] + "\r\n";
         cguildName.Text = CDATA_Pos_end.Count.ToString();
+
+        return CDATA_content;
     }
 
-
+    
 
 
 }
