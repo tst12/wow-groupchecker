@@ -20,17 +20,19 @@ public partial class _Default : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        //XmlDocument newArmoryXML = getNewData();
-        //displayNewData(newArmoryXML);
-        //XmlDocument armoryXML = GetArmoryData("Stonemaul", "Hoybee");
+        XmlDocument newArmoryXML = getNewData();
+        displayNewData(newArmoryXML);
+        
         /*
         To save the XML file
         XmlTextWriter writer = new XmlTextWriter("c:\\temp\\data.xml", null);
         writer.Formatting = Formatting.Indented;
         armoryXML.Save(writer); 
          */
+        //XmlDocument armoryXML = GetArmoryData("Stonemaul", "Hoybee");
         //displayData(armoryXML);
-        getCDATA();
+        
+        //getCDATA();
 
     }
 
@@ -104,13 +106,22 @@ public partial class _Default : System.Web.UI.Page
 
     public void displayNewData(XmlDocument xml)
     {
-        XmlNode characterData = xml.SelectSingleNode("//a/@href");
+        XmlNode characterData = xml.SelectSingleNode("//div[@id=summary-reforging]");
 
 
         //XmlNode characterData = xml.SelectSingleNode("/html/body/div[@id=wrapper]/div[@id=content]/div[@class=content-top]/div[@class=content-bot]/div[@id=profile-wrapper]/div[@class=profile-contents]/div[@class=summary-top]/div[@class=summary-top-inventory]/div[@id=summary-inventory]/div[@class=summary-middle]");
         //XmlNode characterData = xml.SelectSingleNode("/html/body/div[@id=content]/div[@class=content-bot]/div[@id=profile-wrapper]/div[@class=profile-contents]/div[@id=summary-inventory]/div[@class=summary-middle]");
-        string output = characterData.InnerXml;
-        cinitialNode.Text = output;
+        try
+        {
+            string output = characterData.InnerXml;
+            cinitialNode.Text = output;
+        }
+        catch (NullReferenceException)
+        {
+            cinitialNode.Text = "<b>Null Reference</b>";
+        }
+        
+        
     }
 
     // Thanks to http://www.dijksterhuis.org/manipulating-strings-in-csharp-finding-all-occurrences-of-a-string-within-another-string/
