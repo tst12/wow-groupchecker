@@ -16,11 +16,9 @@
             Class: <asp:Label ID="ccharacterClass" runat="server" Text="Character Class"></asp:Label><br />
             Gender: <asp:Label ID="cgender" runat="server" Text="Character Gender"></asp:Label><br />
             Race: <asp:Label ID="crace" runat="server" Text="Character Race"></asp:Label><br />
-            Main Hand: <asp:Label ID="cMH" runat="server" Text="Main Hand"></asp:Label><br />
+            Gear List: <asp:Label ID="citems" runat="server" Text="Gear List"></asp:Label><br />
 
-             Gear: <asp:TextBox ID="citems" runat="server" Text="" TextMode="MultiLine" 
-                Height="150px" Width="400px"></asp:TextBox><br />
-               
+                          
             
             Slot 1: <asp:Label ID="cslot1" runat="server" Text="cslot1"></asp:Label><br />
             Slot 2: <asp:Label ID="cslot2" runat="server" Text="cslot1"></asp:Label><br />
