@@ -14,26 +14,105 @@ using System.Net;
 using System.IO;
 using System.Text;
 using System.Collections;
+using HtmlAgilityPack;
+using System.Collections.Generic;
+
 
 public partial class _Default : System.Web.UI.Page
 {
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        XmlDocument newArmoryXML = getNewData();
-        displayNewData(newArmoryXML);
-        
+        //New Armory Testing
+        //XmlDocument newArmoryXML = getNewData();
+        //displayNewData(newArmoryXML);
+
+        //New Armory Testing with HtmlAgilityPack
+        string newArmoryHtml = getNewDataAsString();
+        displayNewHtml(newArmoryHtml);
+
         /*
         To save the XML file
         XmlTextWriter writer = new XmlTextWriter("c:\\temp\\data.xml", null);
         writer.Formatting = Formatting.Indented;
         armoryXML.Save(writer); 
          */
+        
+        //Old Armory Testing
         //XmlDocument armoryXML = GetArmoryData("Stonemaul", "Hoybee");
         //displayData(armoryXML);
         
+        //New Armory CDATA Testing
         //getCDATA();
 
+    }
+
+    public void displayNewHtml(string data)
+    {
+        // load html
+        HtmlDocument html = new HtmlDocument();
+        html.LoadHtml(data);
+        
+        // extract hrefs
+        List<string> hrefTags = new List<string>();
+        hrefTags = ExtractAllAHrefTags(html);
+
+        // bind to gridview
+        GridViewHrefs.DataSource = hrefTags;
+        GridViewHrefs.DataBind();
+    }
+
+    public static string getNewDataAsString()
+    {
+        HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://us.battle.net/wow/en/character/stonemaul/dankness/advanced");
+        request.UserAgent = @"Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.13) Gecko/20101203 Firefox/3.6.13";
+        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+        string htmlAsString = response.GetResponseStream().ToString();
+
+        Stream resStream = response.GetResponseStream();
+
+        string tempString = null;
+        int count = 0;
+        byte[] buf = new byte[20000];
+        StringBuilder sb = new StringBuilder();
+
+        do
+        {
+            // fill the buffer with data
+            count = resStream.Read(buf, 0, buf.Length);
+
+            // make sure we read some data
+            if (count != 0)
+            {
+                // translate from bytes to ASCII text
+                tempString = Encoding.ASCII.GetString(buf, 0, count);
+
+                // continue building the string
+                sb.Append(tempString);
+            }
+        }
+        while (count > 0); // any more data to read?
+
+        // print out page source
+        htmlAsString = sb.ToString();
+
+        return htmlAsString;
+    }
+
+    //from http://runtingsproper.blogspot.com/2009/11/easily-extracting-links-from-snippet-of.html
+    private List<string> ExtractAllAHrefTags(HtmlDocument htmlSnippet)
+    {
+        List<string> hrefTags = new List<string>();
+
+        foreach (HtmlNode link in htmlSnippet.DocumentNode.SelectNodes("//a[@href]"))
+        //foreach (HtmlNode link in htmlSnippet.DocumentNode.SelectNodes("//html"))
+        {
+            hrefTags.Add(link.InnerText);
+            //HtmlAttribute att = link.Attributes["href"];
+            //hrefTags.Add(att.Value);
+        }
+
+        return hrefTags;
     }
 
     public void displayData(XmlDocument xml)
@@ -103,10 +182,16 @@ public partial class _Default : System.Web.UI.Page
         newArmoryXML.Load(response.GetResponseStream());
         return newArmoryXML;
     }
+    
+
+    
 
     public void displayNewData(XmlDocument xml)
     {
-        XmlNode characterData = xml.SelectSingleNode("//div[@id=summary-reforging]");
+        //XmlNode characterData = xml.SelectSingleNode("//div[@id=summary-reforging]");
+        XmlNode characterData = xml.SelectSingleNode("html");
+        //XmlNodeList characterData = xml.SelectNodes("/html/body/");
+        //XmlNode mainHand = oNode.SelectSingleNode("/page/characterInfo/characterTab/items/item[@slot=15]");
 
 
         //XmlNode characterData = xml.SelectSingleNode("/html/body/div[@id=wrapper]/div[@id=content]/div[@class=content-top]/div[@class=content-bot]/div[@id=profile-wrapper]/div[@class=profile-contents]/div[@class=summary-top]/div[@class=summary-top-inventory]/div[@id=summary-inventory]/div[@class=summary-middle]");
@@ -114,15 +199,17 @@ public partial class _Default : System.Web.UI.Page
         try
         {
             string output = characterData.InnerXml;
-            cinitialNode.Text = output;
+            //int output = characterData.Count;
+            cinitialNode.Text = output.ToString();
         }
         catch (NullReferenceException)
         {
             cinitialNode.Text = "<b>Null Reference</b>";
         }
         
-        
     }
+
+    
 
     // Thanks to http://www.dijksterhuis.org/manipulating-strings-in-csharp-finding-all-occurrences-of-a-string-within-another-string/
     protected static System.Collections.IEnumerable IndexOfAll(string haystack, string needle)
