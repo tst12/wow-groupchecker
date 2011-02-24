@@ -4,7 +4,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
-    <title>Untitled Page</title>
+    <title>StatCompare - ReforgeInfo</title>
     <script type="text/javascript" src="http://static.wowhead.com/widgets/power.js"></script>
 </head>
 <body>
