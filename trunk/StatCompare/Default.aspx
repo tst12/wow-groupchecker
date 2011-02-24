@@ -40,6 +40,7 @@
             ----- Debug -----
             Initial Node: <asp:Label ID="cinitialNode" runat="server" Text="Initial Node"></asp:Label><br />
             Total Node: <asp:Label ID="ctotalNodes" runat="server" Text="Total Nodes"></asp:Label><br />
+            GridViewHrefs: <asp:GridView ID="GridViewHrefs" runat="server"></asp:GridView>
     </div>
     </form>
 </body>
