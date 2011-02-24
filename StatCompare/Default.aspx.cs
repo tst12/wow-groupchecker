@@ -104,10 +104,14 @@ public partial class _Default : System.Web.UI.Page
     {
         List<string> hrefTags = new List<string>();
 
-        foreach (HtmlNode link in htmlSnippet.DocumentNode.SelectNodes("//a[@href]"))
-        //foreach (HtmlNode link in htmlSnippet.DocumentNode.SelectNodes("//html"))
+        int errors = htmlSnippet.ParseErrors.Count();
+        citems.Text = errors.ToString();
+        //foreach (HtmlNode link in htmlSnippet.DocumentNode.SelectNodes("//a[@href]"))
+        foreach (HtmlNode link in htmlSnippet.DocumentNode.SelectNodes("//div[@id='summary-reforging']"))
+        //div[@id=wrapper]/div[@id=content]/div[@class=content-top]/div[@class=content-bot]/div[@id=profile-wrapper]/div[@class=profile-contents]/div[@class=summary-top]/div[@class=summary-top-inventory]/div[@id=summary-inventory]/div[@class=summary-middle]
+        //foreach (HtmlNode link in htmlSnippet.DocumentNode.SelectNodes("//div[@class=summary-reforging]"))
         {
-            hrefTags.Add(link.InnerText);
+            hrefTags.Add(link.InnerHtml);
             //HtmlAttribute att = link.Attributes["href"];
             //hrefTags.Add(att.Value);
         }
