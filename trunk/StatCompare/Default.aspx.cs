@@ -45,7 +45,7 @@ public partial class _Default : System.Web.UI.Page
         //New Armory CDATA Testing
         //getCDATA();
 
-        XmlNode characterInfo = com.hoyb.wow.DownloadCharacter.getCharacterDataFromOld("old", "stonemaul", "hoybee");
+        XmlNode characterInfo = com.hoyb.wow.DownloadCharacter.getCharacterDataFromOld("old", "stonemaul", "dankness");
         displayCharacterData(characterInfo);
     }
 
@@ -53,15 +53,27 @@ public partial class _Default : System.Web.UI.Page
     {
         //Get main-hand info and display a wowhead link-link tooltip
         XmlNode mainHand = characterData.SelectSingleNode("/page/characterInfo/characterTab/items/item[@slot=15]");
+        XmlNodeList equippedItems = characterData.SelectNodes("/page/characterInfo/characterTab/items/item[@slot]");
 
-        string MHID = mainHand.Attributes["id"].Value;
-        string MHName = mainHand.Attributes["name"].Value;
-        string MHIcon = mainHand.Attributes["icon"].Value;
+        string wowheadItemURL, wowheadTooltipLink, itemID, itemName, itemIcon = "";
 
-        string wowheadItemURL = "http://www.wowhead.com/item=" + MHID;
-        string wowheadTooltipLink = "<a href=\"" + wowheadItemURL + "\">" + "<img src=\"http://static.wowhead.com/images/wow/icons/large/" + MHIcon + ".jpg\" alt=\"" + MHName + "\"></a>";
+        
 
-        cMH.Text = wowheadTooltipLink;
+        foreach (XmlNode item in equippedItems)
+        {
+            itemID = item.Attributes["id"].Value;
+            itemName = item.Attributes["name"].Value;
+            itemIcon = item.Attributes["icon"].Value;
+
+            wowheadItemURL = "http://www.wowhead.com/item=" + itemID;
+            wowheadTooltipLink = "<a href=\"" + wowheadItemURL + "\">" + "<img src=\"http://static.wowhead.com/images/wow/icons/large/" + itemIcon + ".jpg\" alt=\"" + itemName + "\"></a>";
+            cMH.Text += wowheadTooltipLink + "<br /><br />\r\n";
+        }
+
+        //wowheadItemURL = "http://www.wowhead.com/item=" + itemID;
+        //wowheadTooltipLink = "<a href=\"" + wowheadItemURL + "\">" + "<img src=\"http://static.wowhead.com/images/wow/icons/large/" + itemIcon + ".jpg\" alt=\"" + itemName + "\"></a>";
+
+        //cMH.Text = wowheadTooltipLink;
         cname.Text = characterData.Attributes["name"].Value;
         cguildName.Text = characterData.Attributes["guildName"].Value;
         cfaction.Text = characterData.Attributes["faction"].Value;
