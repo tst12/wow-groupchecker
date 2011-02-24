@@ -12,7 +12,7 @@
     <div>
             Name: <asp:Label ID="cname" runat="server" Text="Character Name"></asp:Label><br />
             Guild: <asp:Label ID="cguildName" runat="server" Text="Character Prefix"></asp:Label><br />
-            Reforged: <asp:Label ID="cfaction" runat="server" Text="Character Faction"></asp:Label><br />
+            Faction: <asp:Label ID="cfaction" runat="server" Text="Character Faction"></asp:Label><br />
             Class: <asp:Label ID="ccharacterClass" runat="server" Text="Character Class"></asp:Label><br />
             Gender: <asp:Label ID="cgender" runat="server" Text="Character Gender"></asp:Label><br />
             Race: <asp:Label ID="crace" runat="server" Text="Character Race"></asp:Label><br />
