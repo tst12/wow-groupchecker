@@ -28,8 +28,8 @@ public partial class _Default : System.Web.UI.Page
         //displayNewData(newArmoryXML);
 
         //New Armory Testing with HtmlAgilityPack
-        string newArmoryHtml = getNewDataAsString();
-        displayNewHtml(newArmoryHtml);
+        //string newArmoryHtml = getNewDataAsString();
+        //displayNewHtml(newArmoryHtml);
 
         /*
         To save the XML file
@@ -46,111 +46,7 @@ public partial class _Default : System.Web.UI.Page
         //getCDATA();
 
     }
-
-    public void displayNewHtml(string data)
-    {
-        // load html
-        HtmlDocument html = new HtmlDocument();
-        html.LoadHtml(data);
-        
-        // extract hrefs
-        //List<string> hrefTags = new List<string>();
-        HtmlNode reforge_data = GetReforgeData(html);
-        parseReforgeData(reforge_data);
-
-
-        // bind to gridview
-        //GridViewHrefs.DataSource = reforge_data; //must be a list
-        //GridViewHrefs.DataBind(); 
-        citems.Text = reforge_data.InnerHtml;
-    }
-
-    public static string getNewDataAsString()
-    {
-        HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://us.battle.net/wow/en/character/stonemaul/dankness/advanced");
-        request.UserAgent = @"Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.13) Gecko/20101203 Firefox/3.6.13";
-        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-        string htmlAsString = response.GetResponseStream().ToString();
-
-        Stream resStream = response.GetResponseStream();
-
-        string tempString = null;
-        int count = 0;
-        byte[] buf = new byte[20000];
-        StringBuilder sb = new StringBuilder();
-
-        do
-        {
-            // fill the buffer with data
-            count = resStream.Read(buf, 0, buf.Length);
-
-            // make sure we read some data
-            if (count != 0)
-            {
-                // translate from bytes to ASCII text
-                tempString = Encoding.ASCII.GetString(buf, 0, count);
-
-                // continue building the string
-                sb.Append(tempString);
-            }
-        }
-        while (count > 0); // any more data to read?
-
-        // print out page source
-        htmlAsString = sb.ToString();
-
-        return htmlAsString;
-    }
-    private void parseReforgeData(HtmlNode reforge_data){
-        //HtmlNode reforge_summary = reforge_data.DocumentNode.SelectSingleNode("//div[@id='summary-reforging']");
-        HtmlDocument reforgeDataHTML = new HtmlDocument();
-        reforgeDataHTML.LoadHtml(reforge_data.InnerHtml);
-        HtmlNodeCollection reforgeNodes = reforgeDataHTML.DocumentNode.SelectNodes("//li[@data-stat]");
-        ArrayList reforgeInfo = new ArrayList();
-
-        foreach (HtmlNode node in reforgeNodes)
-        {
-            reforgeInfo.Add(node.InnerHtml);
-        }
-
-        cfaction.Text = "";
-        foreach (string item in reforgeInfo)
-        {
-            cfaction.Text += item + "<br />";
-        }
-        /*
-        HtmlNode reforgeNode = reforgeDataHTML.DocumentNode.SelectSingleNode("//li[@data-stat]");
-        cgender.Text = reforgeNode.InnerHtml;
-         */
-    }
-
-
-    //Thanks to http://runtingsproper.blogspot.com/2009/11/easily-extracting-links-from-snippet-of.html
-    //private List<string> GetReforgeData(HtmlDocument html)
-    private HtmlNode GetReforgeData(HtmlDocument html)
-    {
-        List<string> reforgeData = new List<string>();
-        HtmlNode reforge_summary = html.DocumentNode.SelectSingleNode("//div[@id='summary-reforging']");
-        
-        
-        //int errors = html.ParseErrors.Count();
-        //citems.Text = errors.ToString();
-        
-        //foreach (HtmlNode link in html.DocumentNode.SelectNodes("//a[@href]"))
-        //foreach (HtmlNode link in html.DocumentNode.SelectNodes("//div[@class=summary-reforging]"))
-
-        
-        
-        /*foreach (HtmlNode link in html.DocumentNode.SelectNodes("//div[@id='summary-reforging']"))
-        {
-            hrefTags.Add(link.InnerHtml);
-            //HtmlAttribute att = link.Attributes["href"];
-            //hrefTags.Add(att.Value);
-        }
-        */
-
-        return reforge_summary;
-    }
+     
 
     public void displayData(XmlDocument xml)
     {
@@ -198,113 +94,12 @@ public partial class _Default : System.Web.UI.Page
             citems.Text += oNodeList[x].Attributes["name"].Value + "\r\n";
 
     }
-    public static XmlDocument GetArmoryData(string realm, string name)
-    {
-        //connect to old armory to download XML character sheet
-        HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://www.wowarmory.com/character-sheet.xml?r=" + realm + "&cn=" + name + "&rhtml=false");
-        request.UserAgent = @"Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.13) Gecko/20101203 Firefox/3.6.13";
-        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-        XmlDocument armoryXML = new XmlDocument();
-        armoryXML.Load(response.GetResponseStream());
-        return armoryXML;
 
-    }
-
-    public static XmlDocument getNewData()
-    {
-        HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://us.battle.net/wow/en/character/stonemaul/dankness/advanced");
-        request.UserAgent = @"Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.13) Gecko/20101203 Firefox/3.6.13";
-        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-        XmlDocument newArmoryXML = new XmlDocument();
-        newArmoryXML.Load(response.GetResponseStream());
-        return newArmoryXML;
-    }
     
 
     
 
-    public void displayNewData(XmlDocument xml)
-    {
-        //XmlNode characterData = xml.SelectSingleNode("//div[@id=summary-reforging]");
-        XmlNode characterData = xml.SelectSingleNode("html");
-        //XmlNodeList characterData = xml.SelectNodes("/html/body/");
-        //XmlNode mainHand = oNode.SelectSingleNode("/page/characterInfo/characterTab/items/item[@slot=15]");
-
-
-        //XmlNode characterData = xml.SelectSingleNode("/html/body/div[@id=wrapper]/div[@id=content]/div[@class=content-top]/div[@class=content-bot]/div[@id=profile-wrapper]/div[@class=profile-contents]/div[@class=summary-top]/div[@class=summary-top-inventory]/div[@id=summary-inventory]/div[@class=summary-middle]");
-        //XmlNode characterData = xml.SelectSingleNode("/html/body/div[@id=content]/div[@class=content-bot]/div[@id=profile-wrapper]/div[@class=profile-contents]/div[@id=summary-inventory]/div[@class=summary-middle]");
-        try
-        {
-            string output = characterData.InnerXml;
-            //int output = characterData.Count;
-            cinitialNode.Text = output.ToString();
-        }
-        catch (NullReferenceException)
-        {
-            cinitialNode.Text = "<b>Null Reference</b>";
-        }
-        
-    }
-
-    
-
-    // Thanks to http://www.dijksterhuis.org/manipulating-strings-in-csharp-finding-all-occurrences-of-a-string-within-another-string/
-    protected static System.Collections.IEnumerable IndexOfAll(string haystack, string needle)
-    {
-        int pos;
-        int offset = 0;
-        int length = needle.Length;
-        while ((pos = haystack.IndexOf(needle, offset)) != -1)
-        {
-            yield return pos;
-            offset = pos + length;
-        }
-    }
-    
-    // Gets all CDATA from the URL and returns an ArrayList containing all entries, one per index
-    public ArrayList getCDATA()
-    {
-        HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://us.battle.net/wow/en/character/stonemaul/dankness/advanced");
-        request.UserAgent = @"Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.13) Gecko/20101203 Firefox/3.6.13";
-        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-        StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
-        string content = reader.ReadToEnd();
-        reader.Close();
-        response.Close();
-
-        ArrayList CDATA_Pos_start = new ArrayList();
-        ArrayList CDATA_Pos_end = new ArrayList();
-        ArrayList CDATA_content = new ArrayList();
-
-        // Where CDATA begins
-        string CDATA_start = "<![CDATA[";
-        // Where CDATA ends
-        string CDATA_end = "]]>";
-
-        
-        //get the location (index) of the start of all CDATA_Start references in the file
-        foreach (int Pos in IndexOfAll(content, CDATA_start))
-           CDATA_Pos_start.Add(Pos);
-              
-        //get the location (index) of the start of all CDATA_end references in the file
-        foreach (int Pos in IndexOfAll(content, CDATA_end))
-            CDATA_Pos_end.Add(Pos);
-
-        for (int x = 0; x < CDATA_Pos_start.Count; x++)
-        {
-            int length = (int)CDATA_Pos_end[x] - (int)CDATA_Pos_start[x];
-            Console.WriteLine("Length: " + length); //debugging
-            CDATA_content.Add(content.Substring((int)CDATA_Pos_start[x], length + 3)); // add 3 to count for the end tag
-        }
-
-        for (int y = 0; y < CDATA_content.Count; y++)
-            citems.Text += y + ": " + (string)CDATA_content[y] + "\r\n";
-        cguildName.Text = CDATA_Pos_end.Count.ToString();
-
-        return CDATA_content;
-    }
-
-    
+   
 
 
 }
