@@ -52,13 +52,11 @@ public partial class _Default : System.Web.UI.Page
     public void displayCharacterData(XmlNode characterData) 
     {
         //Get main-hand info and display a wowhead link-link tooltip
-        XmlNode mainHand = characterData.SelectSingleNode("/page/characterInfo/characterTab/items/item[@slot=15]");
+        //XmlNode mainHand = characterData.SelectSingleNode("/page/characterInfo/characterTab/items/item[@slot=15]");
         XmlNodeList equippedItems = characterData.SelectNodes("/page/characterInfo/characterTab/items/item[@slot]");
 
         string wowheadItemURL, wowheadTooltipLink, itemID, itemName, itemIcon = "";
-
         
-
         foreach (XmlNode item in equippedItems)
         {
             itemID = item.Attributes["id"].Value;
