@@ -23,35 +23,13 @@ public partial class _Default : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        //New Armory Testing
-        //XmlDocument newArmoryXML = getNewData();
-        //displayNewData(newArmoryXML);
-
-        //New Armory Testing with HtmlAgilityPack
-        //string newArmoryHtml = getNewDataAsString();
-        //displayNewHtml(newArmoryHtml);
-
-        /*
-        To save the XML file
-        XmlTextWriter writer = new XmlTextWriter("c:\\temp\\data.xml", null);
-        writer.Formatting = Formatting.Indented;
-        armoryXML.Save(writer); 
-         */
-        
-        //Old Armory Testing
-        //XmlDocument armoryXML = GetArmoryData("Stonemaul", "Hoybee");
-        //displayData(armoryXML);
-        
-        //New Armory CDATA Testing
-        //getCDATA();
-
         XmlNode characterInfo = com.hoyb.wow.DownloadCharacter.getCharacterDataFromOld("old", "stonemaul", "hoybee");
         displayCharacterData(characterInfo);
     }
 
     public void displayCharacterData(XmlNode characterData) 
     {
-        //Get main-hand info and display a wowhead link-link tooltip
+        //Get equippedItems info and display a wowhead link-link tooltip
         XmlNodeList equippedItems = characterData.SelectNodes("/page/characterInfo/characterTab/items/item[@slot]");
 
         string wowheadItemURL, wowheadTooltipLink, itemID, itemName, itemIcon = "";
@@ -76,33 +54,4 @@ public partial class _Default : System.Web.UI.Page
         
     }
     
-    /*
-    public void displayData(XmlDocument xml)
-    {
-        XmlNode characterData = xml.SelectSingleNode("/page/characterInfo/character");
-
-        //Setup for getting more data & debug
-        XmlNode oNode = xml.DocumentElement;
-        string initialNode = oNode.Name;
-        cinitialNode.Text = initialNode;
-
-        
-
-        //Get all gear and list it in text box
-        XmlNodeList oNodeList = oNode.SelectNodes("/page/characterInfo/characterTab/items/item");
-        int totalNodes = oNodeList.Count;
-        ctotalNodes.Text = totalNodes.ToString();
-
-        for (int x = 0; x < oNodeList.Count; x++)
-            citems.Text += oNodeList[x].Attributes["name"].Value + "\r\n";
-
-    }
-
-    */
-
-    
-
-   
-
-
 }
