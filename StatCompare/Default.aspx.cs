@@ -54,12 +54,15 @@ public partial class _Default : System.Web.UI.Page
         html.LoadHtml(data);
         
         // extract hrefs
-        List<string> hrefTags = new List<string>();
-        hrefTags = ExtractAllAHrefTags(html);
+        //List<string> hrefTags = new List<string>();
+        HtmlNode reforge_data = GetReforgeData(html);
+        //parseReforgeData(reforge_data);
+
 
         // bind to gridview
-        GridViewHrefs.DataSource = hrefTags;
-        GridViewHrefs.DataBind();
+        //GridViewHrefs.DataSource = reforge_data; //must be a list
+        //GridViewHrefs.DataBind(); 
+        citems.Text = reforge_data.InnerHtml;
     }
 
     public static string getNewDataAsString()
@@ -98,25 +101,38 @@ public partial class _Default : System.Web.UI.Page
 
         return htmlAsString;
     }
+    private void parseReforgeData(HtmlNode reforge_data){
+        //HtmlNode reforge_summary = reforge_data.DocumentNode.SelectSingleNode("//div[@id='summary-reforging']");
+        HtmlDocument blah = new HtmlDocument();
+        //blah.LoadHtml(reforge_data);
+    }
 
-    //from http://runtingsproper.blogspot.com/2009/11/easily-extracting-links-from-snippet-of.html
-    private List<string> ExtractAllAHrefTags(HtmlDocument htmlSnippet)
+
+    //Thanks to http://runtingsproper.blogspot.com/2009/11/easily-extracting-links-from-snippet-of.html
+    //private List<string> GetReforgeData(HtmlDocument html)
+    private HtmlNode GetReforgeData(HtmlDocument html)
     {
-        List<string> hrefTags = new List<string>();
+        List<string> reforgeData = new List<string>();
+        HtmlNode reforge_summary = html.DocumentNode.SelectSingleNode("//div[@id='summary-reforging']");
+        
+        
+        //int errors = html.ParseErrors.Count();
+        //citems.Text = errors.ToString();
+        
+        //foreach (HtmlNode link in html.DocumentNode.SelectNodes("//a[@href]"))
+        //foreach (HtmlNode link in html.DocumentNode.SelectNodes("//div[@class=summary-reforging]"))
 
-        int errors = htmlSnippet.ParseErrors.Count();
-        citems.Text = errors.ToString();
-        //foreach (HtmlNode link in htmlSnippet.DocumentNode.SelectNodes("//a[@href]"))
-        foreach (HtmlNode link in htmlSnippet.DocumentNode.SelectNodes("//div[@id='summary-reforging']"))
-        //div[@id=wrapper]/div[@id=content]/div[@class=content-top]/div[@class=content-bot]/div[@id=profile-wrapper]/div[@class=profile-contents]/div[@class=summary-top]/div[@class=summary-top-inventory]/div[@id=summary-inventory]/div[@class=summary-middle]
-        //foreach (HtmlNode link in htmlSnippet.DocumentNode.SelectNodes("//div[@class=summary-reforging]"))
+        
+        
+        /*foreach (HtmlNode link in html.DocumentNode.SelectNodes("//div[@id='summary-reforging']"))
         {
             hrefTags.Add(link.InnerHtml);
             //HtmlAttribute att = link.Attributes["href"];
             //hrefTags.Add(att.Value);
         }
+        */
 
-        return hrefTags;
+        return reforge_summary;
     }
 
     public void displayData(XmlDocument xml)
