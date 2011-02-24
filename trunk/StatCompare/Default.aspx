@@ -17,7 +17,8 @@
             Gender: <asp:Label ID="cgender" runat="server" Text="Character Gender"></asp:Label><br />
             Race: <asp:Label ID="crace" runat="server" Text="Character Race"></asp:Label><br />
             Main Hand: <asp:Label ID="cMH" runat="server" Text="Main Hand"></asp:Label><br />
-            Gear: <asp:TextBox ID="citems" runat="server" Text="" TextMode="MultiLine" 
+
+             Gear: <asp:TextBox ID="citems" runat="server" Text="" TextMode="MultiLine" 
                 Height="150px" Width="400px"></asp:TextBox><br />
                
             
@@ -41,6 +42,10 @@
             Initial Node: <asp:Label ID="cinitialNode" runat="server" Text="Initial Node"></asp:Label><br />
             Total Node: <asp:Label ID="ctotalNodes" runat="server" Text="Total Nodes"></asp:Label><br />
             GridViewHrefs: <asp:GridView ID="GridViewHrefs" runat="server"></asp:GridView>
+
+
+            
+
     </div>
     </form>
 </body>

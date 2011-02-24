@@ -23,13 +23,17 @@ public partial class _Default : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        HttpWebResponse response = com.hoyb.wow.DownloadCharacter.GetArmoryData("new", "stonemaul", "dankness");
+        //Fetches armory data
+        HttpWebResponse response = com.hoyb.wow.DownloadCharacter.GetArmoryResponse("new", "stonemaul", "dankness");
+        //Converts response to an HtmlDocument for parsing
         HtmlDocument armoryHtml = com.hoyb.wow.ResponseConverter.getResponseAsHtmlDoc(response);
 
+        //Breaks armory data to HtmlNode which contains reforge info
         HtmlNode reforge_data = GetReforgeData(armoryHtml);
         ArrayList reforgeInfoParsed = new ArrayList();
         reforgeInfoParsed = parseReforgeData(reforge_data);
 
+        //Displays reforge info on Reforge.aspx
         displayReforgeData(reforgeInfoParsed);
     }
 

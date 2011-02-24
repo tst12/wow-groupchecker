@@ -31,6 +31,6 @@ namespace com.hoyb.wow
         }
 
        
-    }
+    }//class
 
-}
+}//namespace

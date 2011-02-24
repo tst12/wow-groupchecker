@@ -45,45 +45,43 @@ public partial class _Default : System.Web.UI.Page
         //New Armory CDATA Testing
         //getCDATA();
 
+        XmlNode characterInfo = com.hoyb.wow.DownloadCharacter.getCharacterDataFromOld("old", "stonemaul", "hoybee");
+        displayCharacterData(characterInfo);
     }
-     
 
+    public void displayCharacterData(XmlNode characterData) 
+    {
+        //Get main-hand info and display a wowhead link-link tooltip
+        XmlNode mainHand = characterData.SelectSingleNode("/page/characterInfo/characterTab/items/item[@slot=15]");
+
+        string MHID = mainHand.Attributes["id"].Value;
+        string MHName = mainHand.Attributes["name"].Value;
+        string MHIcon = mainHand.Attributes["icon"].Value;
+
+        string wowheadItemURL = "http://www.wowhead.com/item=" + MHID;
+        string wowheadTooltipLink = "<a href=\"" + wowheadItemURL + "\">" + "<img src=\"http://static.wowhead.com/images/wow/icons/large/" + MHIcon + ".jpg\" alt=\"" + MHName + "\"></a>";
+
+        cMH.Text = wowheadTooltipLink;
+        cname.Text = characterData.Attributes["name"].Value;
+        cguildName.Text = characterData.Attributes["guildName"].Value;
+        cfaction.Text = characterData.Attributes["faction"].Value;
+        ccharacterClass.Text = characterData.Attributes["class"].Value;
+        crace.Text = characterData.Attributes["race"].Value;
+        cgender.Text = characterData.Attributes["gender"].Value;
+        
+    }
+    
+    /*
     public void displayData(XmlDocument xml)
     {
         XmlNode characterData = xml.SelectSingleNode("/page/characterInfo/character");
-
-        //Get basic attributes and display them
-        string name = characterData.Attributes["name"].Value;
-        string guildName = characterData.Attributes["guildName"].Value;
-        string faction = characterData.Attributes["faction"].Value;
-        string characterClass = characterData.Attributes["class"].Value;
-        string race = characterData.Attributes["race"].Value;
-        string gender = characterData.Attributes["gender"].Value;
-
-        cname.Text = name;
-        cguildName.Text = guildName;
-        cfaction.Text = faction;
-        ccharacterClass.Text = characterClass;
-        crace.Text = race;
-        cgender.Text = gender;
 
         //Setup for getting more data & debug
         XmlNode oNode = xml.DocumentElement;
         string initialNode = oNode.Name;
         cinitialNode.Text = initialNode;
 
-        //Get main-hand info and display a wowhead link-link tooltip
-        XmlNode mainHand = oNode.SelectSingleNode("/page/characterInfo/characterTab/items/item[@slot=15]");
-        string MHID = mainHand.Attributes["id"].Value;
-        string MHName = mainHand.Attributes["name"].Value;
-        string MHIcon = mainHand.Attributes["icon"].Value;
-
-        string wowheadItemURL = "http://www.wowhead.com/item=" + MHID;
-        //string wowheadLink = "<a href=\"" + wowheadItemURL + "\">" + MHName + "</a>";
-        //string wowheadLink = "<a href=\"" + wowheadItemURL + "\">" + "<img src=\"http://www.wowhead.com/item=" + MHID + "#icon:" + MHIcon + "\" alt=" + MHName + "\"</a>";
-        string wowheadLink = "<a href=\"" + wowheadItemURL + "\">" + "<img src=\"http://static.wowhead.com/images/wow/icons/large/" + MHIcon + ".jpg\" alt=" + MHName + "\"</a>";
-
-        cMH.Text = wowheadLink;
+        
 
         //Get all gear and list it in text box
         XmlNodeList oNodeList = oNode.SelectNodes("/page/characterInfo/characterTab/items/item");
@@ -95,7 +93,7 @@ public partial class _Default : System.Web.UI.Page
 
     }
 
-    
+    */
 
     
 
