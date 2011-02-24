@@ -35,7 +35,7 @@ namespace com.hoyb.wow
             return "WOOT!";
         }
 
-        public static HttpWebResponse GetArmoryData(string oldOrNew, string realm, string name)
+        public static HttpWebResponse GetArmoryResponse(string oldOrNew, string realm, string name)
         {
             //Choose which armory to get content from
             string oldArmory = "http://www.wowarmory.com/character-sheet.xml?r=" + realm + "&cn=" + name + "&rhtml=false";
@@ -55,7 +55,14 @@ namespace com.hoyb.wow
             return response;
         }
 
-       
+        public static XmlNode getCharacterDataFromOld(string oldOrNew, string realm, string name)
+        {
+            HttpWebResponse response = GetArmoryResponse(oldOrNew, realm, name);
+            XmlDocument armoryXml = ResponseConverter.getResponseAsXMLDoc(response);
+            XmlNode characterData = armoryXml.SelectSingleNode("/page/characterInfo/character");
+            return characterData;
+        }
+
         // Gets all CDATA from the URL and returns an ArrayList containing all entries, one per index
         public ArrayList getCDATAFromNew(HttpWebResponse response)
         {
@@ -86,15 +93,13 @@ namespace com.hoyb.wow
             for (int x = 0; x < CDATA_Pos_start.Count; x++)
             {
                 int length = (int)CDATA_Pos_end[x] - (int)CDATA_Pos_start[x];
-                Console.WriteLine("Length: " + length); //debugging
-                CDATA_content.Add(content.Substring((int)CDATA_Pos_start[x], length + 3)); // add 3 to count for the end tag
+                CDATA_content.Add(content.Substring((int)CDATA_Pos_start[x], length + 3)); // add 3 to count for the end tag (]]>)
             }
 
             return CDATA_content;
         }
 
         //Thanks to http://runtingsproper.blogspot.com/2009/11/easily-extracting-links-from-snippet-of.html
-        //private List<string> GetReforgeData(HtmlDocument html)
         private HtmlNode GetReforgeData(HtmlDocument html)
         {
             List<string> reforgeData = new List<string>();
