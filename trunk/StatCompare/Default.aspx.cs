@@ -45,18 +45,17 @@ public partial class _Default : System.Web.UI.Page
         //New Armory CDATA Testing
         //getCDATA();
 
-        XmlNode characterInfo = com.hoyb.wow.DownloadCharacter.getCharacterDataFromOld("old", "stonemaul", "dankness");
+        XmlNode characterInfo = com.hoyb.wow.DownloadCharacter.getCharacterDataFromOld("old", "stonemaul", "hoybee");
         displayCharacterData(characterInfo);
     }
 
     public void displayCharacterData(XmlNode characterData) 
     {
         //Get main-hand info and display a wowhead link-link tooltip
-        //XmlNode mainHand = characterData.SelectSingleNode("/page/characterInfo/characterTab/items/item[@slot=15]");
         XmlNodeList equippedItems = characterData.SelectNodes("/page/characterInfo/characterTab/items/item[@slot]");
 
         string wowheadItemURL, wowheadTooltipLink, itemID, itemName, itemIcon = "";
-        
+        citems.Text = "<br />";
         foreach (XmlNode item in equippedItems)
         {
             itemID = item.Attributes["id"].Value;
@@ -65,13 +64,9 @@ public partial class _Default : System.Web.UI.Page
 
             wowheadItemURL = "http://www.wowhead.com/item=" + itemID;
             wowheadTooltipLink = "<a href=\"" + wowheadItemURL + "\">" + "<img src=\"http://static.wowhead.com/images/wow/icons/large/" + itemIcon + ".jpg\" alt=\"" + itemName + "\"></a>";
-            cMH.Text += wowheadTooltipLink + "<br /><br />\r\n";
+            citems.Text += wowheadTooltipLink + "<br /><br />\r\n";
         }
 
-        //wowheadItemURL = "http://www.wowhead.com/item=" + itemID;
-        //wowheadTooltipLink = "<a href=\"" + wowheadItemURL + "\">" + "<img src=\"http://static.wowhead.com/images/wow/icons/large/" + itemIcon + ".jpg\" alt=\"" + itemName + "\"></a>";
-
-        //cMH.Text = wowheadTooltipLink;
         cname.Text = characterData.Attributes["name"].Value;
         cguildName.Text = characterData.Attributes["guildName"].Value;
         cfaction.Text = characterData.Attributes["faction"].Value;
