@@ -33,6 +33,12 @@ public partial class _Default : System.Web.UI.Page
         ArrayList reforgeInfoParsed = new ArrayList();
         reforgeInfoParsed = parseReforgeData(reforge_data);
 
+        //Fetches a new response.. the old response is gone for some reason -- we need to figure this out so we don't have to make 2+ request to armory every time we load a toon
+        //Once it has the response, it grabs the CDATA, grabs only stat info, reformats it as a javascript associative array, then displays it in the cdata label
+        response = com.hoyb.wow.DownloadCharacter.GetArmoryResponse("new", "stonemaul", "dankness");
+        string stats = com.hoyb.wow.DownloadCharacter.getStats(response);
+        cdata.Text = stats;
+
         //Displays reforge info on Reforge.aspx
         displayReforgeData(reforgeInfoParsed);
     }
