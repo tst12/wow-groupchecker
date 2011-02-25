@@ -23,7 +23,7 @@ public partial class _Default : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        XmlNode characterInfo = com.hoyb.wow.DownloadCharacter.getCharacterDataFromOld("old", "stonemaul", "hoybee");
+        XmlNode characterInfo = com.hoyb.wow.DownloadCharacter.getCharacterDataFromOld("stonemaul", "hoybee");
         displayCharacterData(characterInfo);
     }
 

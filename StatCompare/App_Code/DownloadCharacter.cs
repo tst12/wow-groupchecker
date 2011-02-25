@@ -35,6 +35,7 @@ namespace com.hoyb.wow
             return "WOOT!";
         }
 
+        //Sends a request to the specified armory ('old' or 'new' are acceptable string inputs) and returns the response
         public static HttpWebResponse GetArmoryResponse(string oldOrNew, string realm, string name)
         {
             //Choose which armory to get content from
@@ -55,16 +56,17 @@ namespace com.hoyb.wow
             return response;
         }
 
-        public static XmlNode getCharacterDataFromOld(string oldOrNew, string realm, string name)
+        //Returns an XMLNode containing only character data from the old armory
+        public static XmlNode getCharacterDataFromOld(string realm, string name)
         {
-            HttpWebResponse response = GetArmoryResponse(oldOrNew, realm, name);
+            HttpWebResponse response = GetArmoryResponse("old", realm, name);
             XmlDocument armoryXml = ResponseConverter.getResponseAsXMLDoc(response);
             XmlNode characterData = armoryXml.SelectSingleNode("/page/characterInfo/character");
             return characterData;
         }
 
         // Gets all CDATA from the URL and returns an ArrayList containing all entries, one per index
-        public ArrayList getCDATAFromNew(HttpWebResponse response)
+        public static ArrayList getCDATAFromNew(HttpWebResponse response)
         {
             //input
             StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
@@ -97,6 +99,38 @@ namespace com.hoyb.wow
             }
 
             return CDATA_content;
+        }
+
+        //returns only stats from the CDATA
+        public static string getAllStats(HttpWebResponse response)
+        {
+            ArrayList allCDATA = getCDATAFromNew(response);
+            return allCDATA[7].ToString();
+        }
+
+        //reformats stats as a Javascript associative array -- returns the array, including starting and ending javascript tags
+        public static string parseStats(string allStats)
+        {
+            allStats = allStats.Replace("$(document).ready(function() {", "");
+            allStats = allStats.Replace("<![CDATA[", "");
+            allStats = allStats.Replace("//]]>", "");
+            allStats = allStats.Replace("new Summary.Stats({", "var stats= new Array();");
+            allStats = allStats.Replace("});", "");
+            allStats = allStats.Replace(",", ";");
+            allStats = allStats.Replace("\":", "']=");
+            allStats = allStats.Replace("\"", "stats['");
+            allStats = allStats.Replace("= stats['", "= '"); // fixing strings
+            allStats = allStats.Replace("[';", "';");
+            allStats = "<script type=\"text/javascript\">" + allStats + "</script>";
+            return allStats.Trim();
+        }
+
+        //parses out CDATA from response, grabs only the stats, reformats for javascript
+        public static string getStats(HttpWebResponse response)
+        {
+            string allStats = getAllStats(response);
+            string stats = parseStats(allStats);
+            return stats;
         }
 
         //Thanks to http://runtingsproper.blogspot.com/2009/11/easily-extracting-links-from-snippet-of.html
