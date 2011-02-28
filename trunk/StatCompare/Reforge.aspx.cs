@@ -23,12 +23,14 @@ public partial class _Default : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        //This list will be dynamic once we allow user input.
         List<string> toons = new List<string>();
         toons.Add("dankness,stonemaul");
         toons.Add("hoybee,stonemaul");
         
         string[][] toonNames = new string[10][]; //10 because 10 is probably the most number of toons that should be searched for -- this array contains the name and server for all of the toons searched for. It is used for crafting the armory URL
         
+        //stores the toon name and server in an array so we can stick them in armory URLs
         for(int toonCounter = 0; toonCounter < toons.Count; toonCounter++)
         {
             toons[toonCounter].IndexOf(',');
