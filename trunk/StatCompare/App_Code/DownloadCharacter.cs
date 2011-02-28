@@ -105,7 +105,7 @@ namespace com.hoyb.wow
         public static string getAllStats(HttpWebResponse response)
         {
             ArrayList allCDATA = getCDATAFromNew(response);
-            return allCDATA[7].ToString();
+            return allCDATA[7].ToString(); //THIS NEEDS TO BE DYNAMIC -- STATS IS NOT ALWAYS AT INDEX 7 -- BEST WAY TO FIND IT IS PROBABLY AN INDEXOF SEARCH OF EACH PART OF CDATA
         }
 
         //reformats stats as a Javascript associative array -- returns the array, including starting and ending javascript tags
@@ -128,10 +128,10 @@ namespace com.hoyb.wow
         }
 
         //parses out CDATA from response, grabs only the stats, reformats for javascript
-        public static string getStats(HttpWebResponse response)
+        public static string getStats(HttpWebResponse response, string toonName)
         {
             string allStats = getAllStats(response);
-            string stats = parseStats(allStats, "dankness"); //THIS NEEDS TO BE DYNAMIC
+            string stats = parseStats(allStats, toonName); //THIS NEEDS TO BE DYNAMIC
             return stats;
         }
 
