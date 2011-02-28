@@ -23,8 +23,19 @@ public partial class _Default : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        List<string> toons = new List<string>();
+        toons.Add("dankness,stonemaul");
+        toons.Add("hoybee,stonemaul");
+        
+        string[][] toonNames = new string[10][]; //10 because 10 is probably the most number of toons that should be searched for -- this array contains the name and server for all of the toons searched for. It is used for crafting the armory URL
+        
+        for(int toonCounter = 0; toonCounter < toons.Count; toonCounter++)
+        {
+            toons[toonCounter].IndexOf(',');
+            toonNames[toonCounter] = toons[toonCounter].Split(',');
+        }
         //Fetches armory data
-        HttpWebResponse response = com.hoyb.wow.DownloadCharacter.GetArmoryResponse("new", "stonemaul", "dankness");
+        HttpWebResponse response = com.hoyb.wow.DownloadCharacter.GetArmoryResponse("new", "stonemaul", toonNames[0][0]);
         //Converts response to an HtmlDocument for parsing
         HtmlDocument armoryHtml = com.hoyb.wow.ResponseConverter.getResponseAsHtmlDoc(response);
 
@@ -35,8 +46,8 @@ public partial class _Default : System.Web.UI.Page
 
         //Fetches a new response.. the old response is gone for some reason -- we need to figure this out so we don't have to make 2+ request to armory every time we load a toon
         //Once it has the response, it grabs the CDATA, grabs only stat info, reformats it as a javascript associative array, then displays it in the cdata label
-        response = com.hoyb.wow.DownloadCharacter.GetArmoryResponse("new", "stonemaul", "dankness");
-        string stats = com.hoyb.wow.DownloadCharacter.getStats(response);
+        response = com.hoyb.wow.DownloadCharacter.GetArmoryResponse("new", "stonemaul", toonNames[0][0]);
+        string stats = com.hoyb.wow.DownloadCharacter.getStats(response, toonNames[0][0]);
         cdata.Text = stats;
 
         //Displays reforge info on Reforge.aspx
