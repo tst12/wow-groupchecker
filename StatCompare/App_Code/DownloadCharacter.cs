@@ -120,9 +120,10 @@ namespace com.hoyb.wow
             allStats = allStats.Replace(",", ";");
             allStats = allStats.Replace("\":", "']=");
             allStats = allStats.Replace("\"", "stats['" + toonName + "','");
+
             allStats = allStats.Replace("= stats['" + toonName + "','", "= '"); // fixing strings
             allStats = allStats.Replace("stats['" + toonName + "',';", "';"); //fixes the end of strings, otherwise "stats['<toonName>'", appears at the end of all non-ints in the CDATA.. very similar to above.
-            allStats = allStats.Replace("[';", "';");
+            allStats = allStats.Replace("[';", "';"); //again, fixes strings 
             allStats = "<script type=\"text/javascript\">" + allStats + "</script>";
             return allStats.Trim();
         }
