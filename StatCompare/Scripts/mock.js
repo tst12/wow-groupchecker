@@ -2,7 +2,7 @@ Ext.ns("Mock");
 Mock.StatCompareObj = function(){
 	var oData = [
 		['Xbagz',344,800],
-		['Hoybee',stats['health'],stats['masteryRating']],
+		['Hoybee',stats['dankness','health'],stats['dankness','masteryRating']],
 		['Ur Mom',3,9001]
 	];
 	

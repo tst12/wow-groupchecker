@@ -109,7 +109,8 @@ namespace com.hoyb.wow
         }
 
         //reformats stats as a Javascript associative array -- returns the array, including starting and ending javascript tags
-        public static string parseStats(string allStats)
+        //toonName will become the name of the array that stores the toon's data in Javascript
+        public static string parseStats(string allStats, string toonName)
         {
             allStats = allStats.Replace("$(document).ready(function() {", "");
             allStats = allStats.Replace("<![CDATA[", "");
@@ -118,8 +119,9 @@ namespace com.hoyb.wow
             allStats = allStats.Replace("});", "");
             allStats = allStats.Replace(",", ";");
             allStats = allStats.Replace("\":", "']=");
-            allStats = allStats.Replace("\"", "stats['");
-            allStats = allStats.Replace("= stats['", "= '"); // fixing strings
+            allStats = allStats.Replace("\"", "stats['" + toonName + "','");
+            allStats = allStats.Replace("= stats['" + toonName + "','", "= '"); // fixing strings
+            allStats = allStats.Replace("stats['" + toonName + "',';", "';"); //fixes the end of strings, otherwise "stats['<toonName>'", appears at the end of all non-ints in the CDATA.. very similar to above.
             allStats = allStats.Replace("[';", "';");
             allStats = "<script type=\"text/javascript\">" + allStats + "</script>";
             return allStats.Trim();
@@ -129,7 +131,7 @@ namespace com.hoyb.wow
         public static string getStats(HttpWebResponse response)
         {
             string allStats = getAllStats(response);
-            string stats = parseStats(allStats);
+            string stats = parseStats(allStats, "dankness"); //THIS NEEDS TO BE DYNAMIC
             return stats;
         }
 
