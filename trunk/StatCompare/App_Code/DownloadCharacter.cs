@@ -101,11 +101,24 @@ namespace com.hoyb.wow
             return CDATA_content;
         }
 
+        public static int findStats(ArrayList allCDATA)
+        {
+            int indexOfStats = -1;
+            for (int x = 0; x < allCDATA.Count; x++)
+            {
+                if (allCDATA[x].ToString().IndexOf("Summary.Stats") >= 0)
+                    indexOfStats = x;
+                        
+            }
+            return indexOfStats;
+        }
+
         //returns only stats from the CDATA
         public static string getAllStats(HttpWebResponse response)
         {
             ArrayList allCDATA = getCDATAFromNew(response);
-            return allCDATA[7].ToString(); //THIS NEEDS TO BE DYNAMIC -- STATS IS NOT ALWAYS AT INDEX 7 -- BEST WAY TO FIND IT IS PROBABLY AN INDEXOF SEARCH OF EACH PART OF CDATA
+            int locOfStats = findStats(allCDATA);
+            return allCDATA[locOfStats].ToString(); //THIS NEEDS TO BE DYNAMIC -- STATS IS NOT ALWAYS AT INDEX 7 -- BEST WAY TO FIND IT IS PROBABLY AN INDEXOF SEARCH OF EACH PART OF CDATA
         }
 
         //reformats stats as a Javascript associative array -- returns the array, including starting and ending javascript tags
